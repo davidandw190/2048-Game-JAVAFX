@@ -68,4 +68,8 @@ public class Slot extends AbstractTile{
     public Tile getTile() {
         return tile;
     }
+
+    public void newTileValue() {
+
+    }
 }

@@ -1,6 +1,9 @@
 package src;
 
+import javafx.collections.ObservableList;
 import javafx.scene.layout.TilePane;
+
+import java.util.Random;
 
 public class Board extends TilePane {
 
@@ -35,10 +38,40 @@ public class Board extends TilePane {
     }
 
     private void addSlot(Slot slot) {
+        this.getChildren().add(slot);
+
     }
 
-
     private void initializeBoard() {
+        for (int i = 0; i < 2; i++) {
+            addNewTile();
+        }
+    }
+
+    private void addNewTile() {
+        ObservableList<Slot> emptySlots = getSlotsWithEmptyTiles();
+
+    //    assert emptySlots != null;
+        int numOfEmptySlots = emptySlots.size();
+
+        if (numOfEmptySlots > 1) {
+            Random random = new Random();
+            int randomSlot = random.nextInt(numOfEmptySlots);
+            // add tile appear animation here
+
+        } else {
+            emptySlots.get(0).newTileValue();
+            checkIfOtherMoveAvailable();
+        }
+
+    }
+
+    private void checkIfOtherMoveAvailable() {
+
+    }
+
+    private ObservableList<Slot> getSlotsWithEmptyTiles() {
+        return null;
     }
 
 
