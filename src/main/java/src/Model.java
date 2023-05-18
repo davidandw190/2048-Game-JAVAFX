@@ -71,31 +71,83 @@ public class Model {
 
     }
 
+    /**
+     * Entry point for moving the tiles in the specified direction.
+     * @param logicBoard the 2D array containing the logical tiles
+     * @param direction enum value representing the desired direction of movement
+     * @returns result of the movement( if it was possible or not)
+     */
     static boolean move(Tile[][] logicBoard, Direction direction) {
-        boolean shifted;
-        switch (direction) {
-
-            case DOWN:
-                shifted = moveDown(logicBoard);
-                break;
-            case UP:
-                shifted = moveUp(logicBoard);
-                break;
-            case LEFT:
-                shifted = moveLeft(logicBoard);
-                break;
-            case RIGHT:
-                shifted = moveRight(logicBoard);
-                break;
-            default:
-                shifted = false;
-                break;
-        }
+        boolean shifted = switch (direction) {
+            case DOWN -> moveDown(logicBoard);
+            case UP -> moveUp(logicBoard);
+            case LEFT -> moveLeft(logicBoard);
+            case RIGHT -> moveRight(logicBoard);
+            default -> false;
+        };
         return shifted;
     }
 
 
-    private static void prntBoard(Tile[][] logicBoard) {
+
+    static boolean moveLeft(Tile[][] logicBoard) {
+        System.out.println("Before move:");
+        printBoard(logicBoard);
+        System.out.println();
+        boolean shifted = shiftBoard(logicBoard);
+        System.out.println("After move:");
+        printBoard(logicBoard);
+        System.out.println();
+        return shifted;
+    }
+
+    /**
+     * The 'moveDown()', 'moveRight()', and 'moveUp()' methods use the
+     * 'rotateLogicBoard()' method to rotate the logic board 90 degrees
+     * clockwise multiple times before and after calling the 'shiftBoard()' method.
+     * ------------------------------------------------
+     * The purpose of rotating the board is to simplify the implementation of
+     * tile movements in those directions.
+
+     */
+
+    static boolean moveDown(Tile[][] logicBoard) {
+        boolean shifted;
+        logicBoard = rotateLogicBoard(logicBoard);
+        shifted = shiftBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        return shifted;
+    }
+
+    static boolean moveRight(Tile[][] logicBoard) {
+        boolean shifted;
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        shifted = shiftBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        return shifted;
+    }
+
+    static boolean moveUp(Tile[][] logicBoard) {
+        boolean shifted;
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        shifted = shiftBoard(logicBoard);
+        logicBoard = rotateLogicBoard(logicBoard);
+        return shifted;
+    }
+
+    private static boolean shiftBoard(Tile[][] logicBoard) {
+    }
+
+    private static Tile[][] rotateLogicBoard(Tile[][] logicBoard) {
+    }
+
+    private static void printBoard(Tile[][] logicBoard) {
     }
 
 
