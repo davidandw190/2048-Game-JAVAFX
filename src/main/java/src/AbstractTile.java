@@ -10,7 +10,7 @@ public abstract class AbstractTile extends StackPane {
 
     protected static final double WIDTH = 100.0;
     protected static final double HEIGHT = 100.0;
-    protected Rectangle square;
+    public Rectangle square;
 
     /**
      * Constructor:

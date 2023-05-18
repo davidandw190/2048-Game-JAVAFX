@@ -108,9 +108,7 @@ public class Model {
      * ------------------------------------------------
      * The purpose of rotating the board is to simplify the implementation of
      * tile movements in those directions.
-
      */
-
     static boolean moveDown(Tile[][] logicBoard) {
         boolean shifted;
         logicBoard = rotateLogicBoard(logicBoard);
@@ -140,6 +138,8 @@ public class Model {
         logicBoard = rotateLogicBoard(logicBoard);
         return shifted;
     }
+
+
 
     private static boolean shiftBoard(Tile[][] logicBoard) {
     }
