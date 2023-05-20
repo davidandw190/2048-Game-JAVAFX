@@ -2,6 +2,8 @@ package src;
 
 import javafx.scene.control.Label;
 
+import java.text.BreakIterator;
+
 public class Tile extends AbstractTile {
 
     private int value;
@@ -107,4 +109,6 @@ public class Tile extends AbstractTile {
         this.transition = transition;
     }
 
+    public BreakIterator getValueLabel() {
+    }
 }
