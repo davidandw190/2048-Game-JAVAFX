@@ -5,6 +5,7 @@ package src;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
@@ -58,6 +59,10 @@ public class Board extends TilePane {
         }
     }
 
+    /**
+     * Adds a new tile to the board.
+     * If there's only one slot left, adds a tile and `checkIfOtherMoveAvailable()`
+     */
     private void addNewTile() {
         ObservableList<Slot> emptySlots = getSlotsWithEmptyTiles();
 
@@ -84,9 +89,52 @@ public class Board extends TilePane {
     }
 
     private void gameOver() {
+
     }
 
-    public void moved(Direction key) {
+    /**
+     * Handles all moves, by sending the `tileArray` to the `Model`, plus the direction.
+     * If the model returns true, it loops through the array of tiles, finds the transitions,
+     * and adds them to the `TileAnimation` transition array.
+     * Then, it calls the `playAnimations` method
+     */
+    protected void moved(Direction direction)
+    {
+        if ( Model.move(tileArray, direction))
+            for (Tile[] row : tileArray)
+                for (Tile tile : row)
+                    if (tile.getTransition() > 0) {
+                        TileAnimation.moveTile(tile, tile.getTransition(), direction);
+                        tile.setTransition(0);
+                    }
+
+        TileAnimation.playAnimations();
+
+    }
+
+
+    private ObservableList<Slot> getSlotsWithEmptyTiles() {
+        ObservableList<Slot> emptySlots = getAllSlots();
+
+        for (int i=0; i<emptySlots.size(); i++) {
+            if (emptySlots.get(i).tileValue() != 0) {
+                emptySlots.remove(i--);
+            }
+        }
+
+        return emptySlots;
+    }
+
+    private ObservableList<Slot> getAllSlots() {
+        ObservableList<Slot> allSlots = FXCollections.observableArrayList();
+        for (Node node : this.getChildren()) {
+            allSlots.add((Slot) node);
+        }
+
+        return allSlots;
+    }
+
+    public void moved(KeyEvent key) {
         switch (key.getCode()) {
             case UP:
                 moved(UP);
@@ -108,11 +156,9 @@ public class Board extends TilePane {
         }
     }
 
-    private ObservableList<Slot> getSlotsWithEmptyTiles() {
-        return null;
+    public Tile[][] getTileArray() {
+        return tileArray;
     }
-
-
 
 
 }

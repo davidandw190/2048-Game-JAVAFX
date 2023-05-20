@@ -3,7 +3,6 @@ package test;
 
 import src.Tile;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,7 +12,7 @@ public class TileTest {
 
     private Tile tile;
 
-    @BeforeEach
+
     public void setUp() {
         tile = new Tile();
     }

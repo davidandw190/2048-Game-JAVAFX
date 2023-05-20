@@ -8,8 +8,8 @@ import javafx.scene.shape.Rectangle;
  */
 public abstract class AbstractTile extends StackPane {
 
-    protected static final double WIDTH = 100.0;
-    protected static final double HEIGHT = 100.0;
+    protected static final double WIDTH = 120.0;
+    protected static final double HEIGHT = 120.0;
     public Rectangle square;
 
     /**
