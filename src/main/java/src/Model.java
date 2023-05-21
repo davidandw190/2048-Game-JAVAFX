@@ -184,7 +184,7 @@ public class Model {
      * Responsible for finding the target position for the current tile
      */
     private static int findTargetPosition(Tile[] row, int currentIndex, int stop) {
-        int targetPosition = -1;
+        int targetPosition = -1; // an invalid target position
         for (int j = currentIndex - 1; j >= stop; j--) {
             if (row[j].getValue() == 0) {
                 if (j == 0 || j == stop) {
@@ -211,6 +211,7 @@ public class Model {
      */
     private static void updateTiles(Tile[] row, int currentIndex, int targetPosition) {
         if (row[targetPosition].getValue() != 0) {
+            // if tile at target pos not emoty, a merge will occur
             row[targetPosition].wasCombinated();
         }
         row[targetPosition].setValue(row[currentIndex].getValue() + row[targetPosition].getValue());
@@ -249,10 +250,20 @@ public class Model {
     }
 
     private static Tile[][] rotateLogicBoard(Tile[][] logicBoard) {
-        return null;
+        int i = board.length;
+        int j = board[0].length;
+
+        var rotatedArray = new Tile[i][j];
+        for(int r = 0; r < i; r++) {
+            for (int c = 0; c < j; c++) {
+                rotatedArray[c][i - 1 - r] = logicBoard[r][c];
+            }
+        }
+        return rotatedArray;
     }
 
     private static void printBoard(Tile[][] logicBoard) {
+
     }
 
 }

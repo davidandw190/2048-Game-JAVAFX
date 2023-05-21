@@ -1,6 +1,7 @@
 package test;
 
 
+import org.junit.Before;
 import src.Tile;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class TileTest {
 
     private Tile tile;
 
-
+    @Before
     public void setUp() {
         tile = new Tile();
     }
