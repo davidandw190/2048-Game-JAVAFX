@@ -142,15 +142,103 @@ public class Model {
 
 
     private static boolean shiftBoard(Tile[][] logicBoard) {
+        boolean boardShifted = false;
+        for (Tile[] row : logicBoard) {
+            if (mergeRow(row)) {
+                boardShifted = true;
+            }
+        }
+        return boardShifted;
+    }
+
+    /**
+     * Merges similar values and shifts to the respective wall
+     */
+    private static boolean mergeRow(Tile[] row) {
+        boolean merged = false;
+        int targetPosition = -1, stop = 0;
+
+        for (int i = 1; i < row.length; i++) {
+            if (row[i].getValue() != 0) {
+                for (int j = i - 1; j >= stop; j--) {
+                    if (row[j].getValue() == 0) {
+
+                        if (j == 0 || j == stop) {
+                            targetPosition = j;
+                            stop = j;
+                            break;
+
+                        } else {
+                            continue;
+                        }
+
+                    } else {
+                        if (row[j].getValue() == row[i].getValue()) {
+                            targetPosition = j;
+                            stop = j + 1;
+                            break;
+
+                        } else {
+                            targetPosition = j + 1;
+                            stop = targetPosition;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetPosition != i && targetPosition != -1) {
+
+                    if (row[targetPosition].getValue() != 0) {
+                        row[targetPosition].wasCombinated();
+                    }
+
+                    row[targetPosition].setValue(row[i].getValue() + row[targetPosition].getValue());
+                    row[i].setTransition(row[i].getTransition() + Math.abs(targetPosition - i));
+                    row[i].setValue(0);
+
+                    targetPosition = -1;
+                    merged = true;
+                }
+            }
+        }
+        return merged;
+
+    }
+
+    /**
+     * Checks if there is any possibility of merging two tiles on the board.
+     * It iterates over each row and column of the logicBoard and compares the values of adjacent tiles.
+     * If any pair of adjacent tiles has the same value, it sets check to true.
+     * @returns the boolean value of the check
+     */
+    static boolean checkPossibleMerge(Tile[][] logicBoard) {
+        boolean check = false;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (logicBoard[i][j].getValue() == logicBoard[i][j + 1].getValue()) {
+                    check = true;
+                    System.out.println(check);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (logicBoard[j][i].getValue() == logicBoard[j + 1][i].getValue()) {
+                    check = true;
+                    System.out.println(check);
+                }
+            }
+        }
+
+        return check;
     }
 
     private static Tile[][] rotateLogicBoard(Tile[][] logicBoard) {
+        return null;
     }
 
     private static void printBoard(Tile[][] logicBoard) {
     }
 
-
-    public static boolean checkPossibleMerge(Tile[][] tileArray) {
-    }
 }
