@@ -54,9 +54,7 @@ public class Model {
             }
         }
         int[][] emptyTiles = new int[i][2];
-        for (int j = 0; j < i; j++) {
-            emptyTiles[j] = emptyArray[j];
-        }
+        System.arraycopy(emptyArray, 0, emptyTiles, 0, i);
 
         return emptyTiles;
     }
@@ -78,14 +76,13 @@ public class Model {
      * @returns result of the movement( if it was possible or not)
      */
     static boolean move(Tile[][] logicBoard, Direction direction) {
-        boolean shifted = switch (direction) {
+        return switch (direction) {
             case DOWN -> moveDown(logicBoard);
             case UP -> moveUp(logicBoard);
             case LEFT -> moveLeft(logicBoard);
             case RIGHT -> moveRight(logicBoard);
-            default -> false;
+//            default -> false;
         };
-        return shifted;
     }
 
 
@@ -112,6 +109,7 @@ public class Model {
     static boolean moveDown(Tile[][] logicBoard) {
         boolean shifted;
         logicBoard = rotateLogicBoard(logicBoard);
+        assert logicBoard != null;
         shifted = shiftBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
@@ -123,6 +121,7 @@ public class Model {
         boolean shifted;
         logicBoard = rotateLogicBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
+        assert logicBoard != null;
         shifted = shiftBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
@@ -134,13 +133,19 @@ public class Model {
         logicBoard = rotateLogicBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
+        assert logicBoard != null;
         shifted = shiftBoard(logicBoard);
         logicBoard = rotateLogicBoard(logicBoard);
         return shifted;
     }
 
 
-
+    /**
+     * Shifts the tiles on the board in the specified direction.
+     * Iterates over each row of the `logicBoard` and calls the `mergeRow()` method
+     * to merge similar values and shift them towards the respective wall.
+     * If any tiles were merged, the boardShifted return variable is set to true.
+     */
     private static boolean shiftBoard(Tile[][] logicBoard) {
         boolean boardShifted = false;
         for (Tile[] row : logicBoard) {
@@ -152,58 +157,67 @@ public class Model {
     }
 
     /**
-     * Merges similar values and shifts to the respective wall
+     * Merges similar values and shifts to the respective wall.
+     * It iterates over the row from left to right and checks each tile's value.
      */
     private static boolean mergeRow(Tile[] row) {
+
+        // used to track the pos where the curr tile should be moved and the stopping point
         boolean merged = false;
         int targetPosition = -1, stop = 0;
 
         for (int i = 1; i < row.length; i++) {
             if (row[i].getValue() != 0) {
-                for (int j = i - 1; j >= stop; j--) {
-                    if (row[j].getValue() == 0) {
-
-                        if (j == 0 || j == stop) {
-                            targetPosition = j;
-                            stop = j;
-                            break;
-
-                        } else {
-                            continue;
-                        }
-
-                    } else {
-                        if (row[j].getValue() == row[i].getValue()) {
-                            targetPosition = j;
-                            stop = j + 1;
-                            break;
-
-                        } else {
-                            targetPosition = j + 1;
-                            stop = targetPosition;
-                            break;
-                        }
-                    }
-                }
-
+                // if the val of curr tile is not zero, we determine the appropriate pos for the tile
+                targetPosition = findTargetPosition(row, i, stop);
                 if (targetPosition != i && targetPosition != -1) {
-
-                    if (row[targetPosition].getValue() != 0) {
-                        row[targetPosition].wasCombinated();
-                    }
-
-                    row[targetPosition].setValue(row[i].getValue() + row[targetPosition].getValue());
-                    row[i].setTransition(row[i].getTransition() + Math.abs(targetPosition - i));
-                    row[i].setValue(0);
-
-                    targetPosition = -1;
+                    // if a valid pos exists, we perform the necessary updates and set `merged` true
+                    updateTiles(row, i, targetPosition);
                     merged = true;
                 }
             }
         }
         return merged;
-
     }
+
+    /**
+     * Responsible for finding the target position for the current tile
+     */
+    private static int findTargetPosition(Tile[] row, int currentIndex, int stop) {
+        int targetPosition = -1;
+        for (int j = currentIndex - 1; j >= stop; j--) {
+            if (row[j].getValue() == 0) {
+                if (j == 0 || j == stop) {
+                    targetPosition = j;
+                    stop = j;
+                    break;
+                }
+            } else {
+                if (row[j].getValue() == row[currentIndex].getValue()) {
+                    targetPosition = j;
+                    stop = j + 1;
+                } else {
+                    targetPosition = j + 1;
+                    stop = targetPosition;
+                }
+                break;
+            }
+        }
+        return targetPosition;
+    }
+
+    /**
+     * Handles the update and merging of the tiles based on the target position.
+     */
+    private static void updateTiles(Tile[] row, int currentIndex, int targetPosition) {
+        if (row[targetPosition].getValue() != 0) {
+            row[targetPosition].wasCombinated();
+        }
+        row[targetPosition].setValue(row[currentIndex].getValue() + row[targetPosition].getValue());
+        row[currentIndex].setTransition(row[currentIndex].getTransition() + Math.abs(targetPosition - currentIndex));
+        row[currentIndex].setValue(0);
+    }
+
 
     /**
      * Checks if there is any possibility of merging two tiles on the board.
@@ -242,3 +256,52 @@ public class Model {
     }
 
 }
+
+
+//    private static boolean mergeRow(Tile[] row) {
+//        boolean merged = false;
+//        int targetPosition = -1, stop = 0;
+//
+//        for (int i = 1; i < row.length; i++) {   // starting from the 2nd tile since there are
+//            if (row[i].getValue() != 0) {          // no tiles to the left of the 1st tile
+//                for (int j = i - 1; j >= stop; j--) {
+//
+//                    if (row[j].getValue() == 0) {
+//
+//                        if (j == 0 || j == stop) {
+//                            targetPosition = j;
+//                            stop = j;
+//                            break;
+//                        }
+//
+//                    } else {
+//                        if (row[j].getValue() == row[i].getValue()) {
+//                            targetPosition = j;
+//                            stop = j + 1;
+//
+//                        } else {
+//                            targetPosition = j + 1;
+//                            stop = targetPosition;
+//                        }
+//                        break;
+//                    }
+//                }
+//
+//                if (targetPosition != i && targetPosition != -1) {
+//
+//                    if (row[targetPosition].getValue() != 0) {
+//                        row[targetPosition].wasCombinated();
+//                    }
+//
+//                    row[targetPosition].setValue(row[i].getValue() + row[targetPosition].getValue());
+//                    row[i].setTransition(row[i].getTransition() + Math.abs(targetPosition - i));
+//                    row[i].setValue(0);
+//
+//                    targetPosition = -1;
+//                    merged = true;
+//                }
+//            }
+//        }
+//        return merged;
+//
+//    }

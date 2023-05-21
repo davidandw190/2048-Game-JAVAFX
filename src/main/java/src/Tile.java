@@ -42,7 +42,6 @@ public class Tile extends AbstractTile {
 
     }
 
-
     public boolean isCombination(){
         return isCombination;
     }
@@ -110,5 +109,6 @@ public class Tile extends AbstractTile {
     }
 
     public BreakIterator getValueLabel() {
+        return null;
     }
 }
