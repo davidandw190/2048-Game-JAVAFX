@@ -53,7 +53,6 @@ public class Slot extends AbstractTile{
      */
     public int tileValue() {
         return tile.getValue();
-
     }
 
     /**
@@ -64,11 +63,12 @@ public class Slot extends AbstractTile{
         this .getChildren().add(tile);
     }
 
+
     public Tile getTile() {
         return tile;
     }
 
     public void newTileValue() {
-
+        tile.newValue();
     }
 }
