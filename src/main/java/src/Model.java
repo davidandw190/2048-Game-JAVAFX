@@ -21,54 +21,6 @@ public class Model {
         }
     }
 
-
-    /**
-     * Adds a new logical tile to the game board.
-     */
-    private void addNewLogicalTile() {
-        int[][] emptyTiles = getEmptyTiles(); // returns a 2D array containing the coordinates of all the empty tiles
-        if (emptyTiles.length > 0) {
-            Random rand = new Random();
-            int randNum = rand.nextInt(emptyTiles.length);
-
-            int row = emptyTiles[randNum][0];  // The row and column of the selected empty tile
-            int column = emptyTiles[randNum][1]; // are extracted
-
-            board[row][column] = newValue();
-        }
-
-    }
-
-    /**
-     * @returns a 2D array with the coordinates of all the empty tiles on the game board.
-     */
-    private int[][] getEmptyTiles() {
-        int i = 0;
-        int[][] emptyArray = new int[16][2];
-        for (int row = 0; row < ROWS; row++) {
-            for (int column = 0; column < COLUMNS; column++) {
-                if (board[row][column] == 0) {
-                    emptyArray[i] = new int[]{row, column};
-                }
-                i++;
-            }
-        }
-        int[][] emptyTiles = new int[i][2];
-        System.arraycopy(emptyArray, 0, emptyTiles, 0, i);
-
-        return emptyTiles;
-    }
-
-    private int newValue() {
-        if (Math.random() < 0.9) {
-            return 2;
-        }
-        else {
-            return 4;
-        }
-
-    }
-
     /**
      * Entry point for moving the tiles in the specified direction.
      * @param logicBoard the 2D array containing the logical tiles
@@ -81,11 +33,8 @@ public class Model {
             case UP -> moveUp(logicBoard);
             case LEFT -> moveLeft(logicBoard);
             case RIGHT -> moveRight(logicBoard);
-//            default -> false;
         };
     }
-
-
 
     static boolean moveLeft(Tile[][] logicBoard) {
         System.out.println("Before move:");
@@ -139,6 +88,82 @@ public class Model {
         return shifted;
     }
 
+    /**
+     * Checks if there is any possibility of merging two tiles on the board.
+     * It iterates over each row and column of the logicBoard and compares the values of adjacent tiles.
+     * If any pair of adjacent tiles has the same value, it sets check to true.
+     * @returns the boolean value of the check
+     */
+    static boolean checkPossibleMerge(Tile[][] logicBoard) {
+        boolean check = false;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (logicBoard[i][j].getValue() == logicBoard[i][j + 1].getValue()) {
+                    check = true;
+                    System.out.println(check);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (logicBoard[j][i].getValue() == logicBoard[j + 1][i].getValue()) {
+                    check = true;
+                    System.out.println(check);
+                }
+            }
+        }
+
+        return check;
+    }
+
+
+    /**
+     * Adds a new logical tile to the game board.
+     */
+    private void addNewLogicalTile() {
+        int[][] emptyTiles = getEmptyTiles(); // returns a 2D array containing the coordinates of all the empty tiles
+        if (emptyTiles.length > 0) {
+            Random rand = new Random();
+            int randNum = rand.nextInt(emptyTiles.length);
+
+            int row = emptyTiles[randNum][0];  // The row and column of the selected empty tile
+            int column = emptyTiles[randNum][1]; // are extracted
+
+            board[row][column] = newValue();
+        }
+
+    }
+
+    /**
+     * @returns a 2D array with the coordinates of all the empty tiles on the game board.
+     */
+    private int[][] getEmptyTiles() {
+        int i = 0;
+        int[][] emptyArray = new int[16][2];
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
+                if (board[row][column] == 0) {
+                    emptyArray[i] = new int[]{row, column};
+                }
+                i++;
+            }
+        }
+        int[][] emptyTiles = new int[i][2];
+        System.arraycopy(emptyArray, 0, emptyTiles, 0, i);
+
+        return emptyTiles;
+    }
+
+    private int newValue() {
+        if (Math.random() < 0.9) {
+            return 2;
+        }
+        else {
+            return 4;
+        }
+
+    }
 
     /**
      * Shifts the tiles on the board in the specified direction.
@@ -219,35 +244,6 @@ public class Model {
         row[currentIndex].setValue(0);
     }
 
-
-    /**
-     * Checks if there is any possibility of merging two tiles on the board.
-     * It iterates over each row and column of the logicBoard and compares the values of adjacent tiles.
-     * If any pair of adjacent tiles has the same value, it sets check to true.
-     * @returns the boolean value of the check
-     */
-    static boolean checkPossibleMerge(Tile[][] logicBoard) {
-        boolean check = false;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (logicBoard[i][j].getValue() == logicBoard[i][j + 1].getValue()) {
-                    check = true;
-                    System.out.println(check);
-                }
-            }
-        }
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (logicBoard[j][i].getValue() == logicBoard[j + 1][i].getValue()) {
-                    check = true;
-                    System.out.println(check);
-                }
-            }
-        }
-
-        return check;
-    }
 
     private static Tile[][] rotateLogicBoard(Tile[][] logicBoard) {
         int i = board.length;

@@ -64,7 +64,6 @@ public class Slot extends AbstractTile{
         this .getChildren().add(tile);
     }
 
-
     public Tile getTile() {
         return tile;
     }

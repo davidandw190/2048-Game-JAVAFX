@@ -37,6 +37,43 @@ public class Board extends TilePane {
 
     }
 
+    public void moved(KeyEvent key) {
+        switch (key.getCode()) {
+            case UP -> moved(UP);
+            case DOWN -> moved(DOWN);
+            case LEFT -> moved(LEFT);
+            case RIGHT -> moved(Direction.RIGHT);
+            case O -> gameOver();
+            default -> {
+            }
+        }
+    }
+
+    /**
+     * Handles all moves, by sending the `tileArray` to the `Model`, plus the direction.
+     * If the model returns true, it loops through the array of tiles, finds the transitions,
+     * and adds them to the `TileAnimation` transition array.
+     * Then, it calls the `playAnimations` method
+     */
+    protected void moved(Direction direction)
+    {
+        if ( Model.move(tileArray, direction))
+            for (Tile[] row : tileArray)
+                for (Tile tile : row)
+                    if (tile.getTransition() > 0) {
+                        TileAnimation.moveTile(tile, tile.getTransition(), direction);
+                        tile.setTransition(0);
+                    }
+
+        TileAnimation.playAnimations();
+
+    }
+
+
+    public Tile[][] getTileArray() {
+        return tileArray;
+    }
+
     /**
      * Fills the board with Slots.
      */
@@ -89,26 +126,6 @@ public class Board extends TilePane {
     }
 
     private void gameOver() {
-
-    }
-
-    /**
-     * Handles all moves, by sending the `tileArray` to the `Model`, plus the direction.
-     * If the model returns true, it loops through the array of tiles, finds the transitions,
-     * and adds them to the `TileAnimation` transition array.
-     * Then, it calls the `playAnimations` method
-     */
-    protected void moved(Direction direction)
-    {
-        if ( Model.move(tileArray, direction))
-            for (Tile[] row : tileArray)
-                for (Tile tile : row)
-                    if (tile.getTransition() > 0) {
-                        TileAnimation.moveTile(tile, tile.getTransition(), direction);
-                        tile.setTransition(0);
-                    }
-
-        TileAnimation.playAnimations();
 
     }
 
@@ -168,32 +185,5 @@ public class Board extends TilePane {
             tileArray[row][column] = tile;
         }
     }
-
-    public void moved(KeyEvent key) {
-        switch (key.getCode()) {
-            case UP:
-                moved(UP);
-                break;
-            case DOWN:
-                moved(DOWN);
-                break;
-            case LEFT:
-                moved(LEFT);
-                break;
-            case RIGHT:
-                moved(Direction.RIGHT);
-                break;
-            case O:
-                gameOver();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public Tile[][] getTileArray() {
-        return tileArray;
-    }
-
 
 }
