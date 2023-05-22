@@ -263,7 +263,14 @@ public class Model {
     }
 
     private static void printBoard(Tile[][] logicBoard) {
+        System.out.println();
+        for (Tile[] row : logicBoard) {
+            for (Tile j: row) {
+                System.out.print("["+j.getValue() + "] "+j.getTransition() + " | ");
+            }
 
+            System.out.println();
+        }
     }
 
 }

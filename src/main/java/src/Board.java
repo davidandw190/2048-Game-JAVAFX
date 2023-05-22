@@ -114,6 +114,7 @@ public class Board extends TilePane {
 
 
     private ObservableList<Slot> getSlotsWithEmptyTiles() {
+
         ObservableList<Slot> emptySlots = getAllSlots();
 
         for (int i=0; i<emptySlots.size(); i++) {
@@ -125,13 +126,47 @@ public class Board extends TilePane {
         return emptySlots;
     }
 
+    /**
+     * Gets all the nodes of the board cast them into Slots and returns them as an ObservableList
+     * @returns all the Slot nodes of the board
+     */
     private ObservableList<Slot> getAllSlots() {
+
         ObservableList<Slot> allSlots = FXCollections.observableArrayList();
+
         for (Node node : this.getChildren()) {
             allSlots.add((Slot) node);
         }
 
         return allSlots;
+    }
+
+    /**
+     * Transfers all the nodes from the game board into a 2D array to
+     * facilitate traversal and comparison.
+     */
+    private void addTilesToArray() {
+        ObservableList<Slot> slots = getAllSlots();
+
+        for (int i=0; i < slots.size(); i++) {
+            Slot slot = slots.get(i);
+            Tile tile = slot.getTile();
+
+            int row;
+
+            if (i < 4) {
+                row = 0;
+            } else if (i < 8) {
+                row = 1;
+            } else if (i < 12) {
+                row = 2;
+            } else {
+                row = 3;
+            }
+
+            int column = i % 4;
+            tileArray[row][column] = tile;
+        }
     }
 
     public void moved(KeyEvent key) {
