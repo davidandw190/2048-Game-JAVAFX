@@ -52,4 +52,3 @@ public class Game extends Application {
         window.show();
     }
 }
-}
